@@ -1,0 +1,30 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="game-score">
+    <template>
+        <h1>Your score is [[score]]</h1>
+    </template>
+    <script>
+        class GameScore extends Polymer.Element {
+            static get is() {
+                return "game-score";
+            }
+            constructor() {
+                super();
+                this.score1 = 999;
+            }
+
+            static get properties() {
+                return {
+                    /* Defines score for current user */
+                    score: {
+                        type: String,
+                        value: '',
+                        reflectToAttribute: true
+                    }
+                }
+            }
+        }
+        customElements.define(GameScore.is, GameScore);
+    </script>
+</dom-module>

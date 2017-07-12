@@ -1,0 +1,248 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="game-card">
+    <template>
+        <style>
+            :host {
+                display: inline-block;
+                font-size: 3em;
+                height: 154px; /* 88 * 3 */
+                width: 108.5px; /* 62 * 3 */
+                margin: 4px;
+                -webkit-touch-callout: none; /* iOS Safari */
+                -webkit-user-select: none; /* Chrome/Safari/Opera */
+                -moz-user-select: none; /* Firefox */
+                user-select: none; /* Non-prefixed version, currently not supported by any browser */
+                touch-action: none;
+
+                /* Hide flickering */
+                backface-visibility: hidden;
+                -webkit-backface-visibility: hidden;
+
+                -webkit-tap-highlight-color: rgba(0,0,0,0);
+            }
+
+            :host * {
+                box-sizing: border-box;
+            }
+
+            #container {
+                position: relative;
+                height: 100%;
+                width: 100%;
+
+                /* entire container, keeps perspective */
+                perspective: 1000px;
+            }
+
+
+            #front, #back {
+              /* flip speed goes here */
+              transition: transform 0.25s;
+            }
+
+            #back {
+              /* back, initially hidden pane */
+              transform: rotateY(-180deg);
+              /*-webkit-transform:rotateY(-180deg);
+                -moz-transform:rotateY(-180deg);
+                -ms-transform:rotateY(-180deg);
+                -o-transform:rotateY(-180deg);*/
+            }
+
+            /* flip the pane when hovered */
+            :host([unrevealed]) #back {
+                /*transform: rotateY(0deg);*/
+
+                 transform: rotate3d(0, 1, 0, 0deg);
+
+                /*-webkit-transform:rotateY(0deg);
+                -moz-transform:rotateY(0deg);
+                -ms-transform:rotateY(0deg);
+                -o-transform:rotateY(0deg);*/
+            }
+
+            /* Workaround to force Safari to paint again */
+            /* Ref: https://stackoverflow.com/questions/25468701/why-does-the-host-selector-only-work-in-chrome-with-platform-js */
+            :host(:active) #front,
+            :host(:active) #back {
+                border: 0px solid transparent;
+            }
+            
+            :host([unrevealed]) #front {                
+                transform: rotate3d(0, 1, 0, 180deg);
+            }
+
+            :host([disable]) {
+                opacity: 0;
+            }
+
+            #front, #back {
+                width: 100%;
+                height: 100%;
+            }
+
+            #front, #back {
+                backface-visibility: hidden;
+                -webkit-backface-visibility: hidden;
+                position: absolute;
+                border-radius: 10px;
+                background: #FFF;
+                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+                top: 0;
+                left: 0;
+            }
+            #front, #back {
+                padding: 10px;
+            }
+
+            #back-draw {
+                height: 100%;
+                width: 100%;
+                border-radius: 10px;
+                background-color: #f34837;
+                background-image: url('../assets/bg.png');
+                background-repeat: no-repeat;
+                background-position: 50% 50%;
+                background-size: 75%;
+            }
+
+            /* front pane, placed above back */
+            #front {
+                z-index: 2;
+                /* for firefox 31 */
+                transform: rotateY(0deg);
+                -webkit-transform:rotateY(0deg);
+            }
+
+            .reversed {
+                 transform: rotate3d(0, 0, 1, 180deg);
+            }
+
+            .hidden {
+                display: none;
+            }
+
+            .front__image {
+                width: 100%;
+                height: 100%;
+                border-radius: 10px;
+                background-repeat: no-repeat;
+            }
+        </style>
+
+        <div id="container">
+            <div id="front">
+                <img class="front__image" src="[[_updateFrontImage(url)]]">
+            </div>
+            <div id="back">
+                <div id="back-draw"></div>
+            </div>
+        </div>
+
+    </template>
+
+    <script>
+        class GameCard extends Polymer.Element {
+
+            static get is() { return 'game-card'; }
+
+
+            static get properties() {
+                return {
+                   
+                    /* Tells whether the card show its front or back face. */
+                    unrevealed: {
+                        type: Boolean,
+                        value: false,
+                        reflectToAttribute: true,
+                    },
+
+                    /* Called when unrevealed */
+                    onReveal: {
+                        type: Function,
+                        value: new Function()
+                    },
+
+                    /* Tells whether the card can be flipped by clicking on it. */
+                    flippable: {
+                        type: Boolean,
+                        value: false,
+                        reflectToAttribute: true
+                    },
+
+                    /* Defines url for background image for card front */
+                    url: {
+                        type: String,
+                        value: '',
+                        reflectToAttribute:true
+                    },
+
+                    /* Tells whether the card is shown or hidden */
+                    disable: {
+                        type: Boolean,
+                        value: false,
+                        reflectToAttribute:true
+                    },
+
+                    /* Card id */
+                    id: {
+                        type: Number
+                    },
+
+                    /* Card index */
+                    idx: {
+                        type: Number,
+                        value: null
+                    }
+                }
+            }
+
+            static get observers() {
+                return [
+                  '_flippableChanged(flippable)'
+                //   ,'_enableChanged(enabled)'
+                ]
+              }
+
+            constructor() {
+                super();
+                this._flip = this.flip.bind(this);
+                // this._enabled = this.enable.bind(this);
+            }
+
+            flip() {
+                this.unrevealed = !this.unrevealed;
+
+                if(!this.unrevealed) {
+                    onReveal(this.id, this.idx);
+                }
+            }
+
+            _flippableChanged(flippable) {
+                if (flippable) {
+                    this.$.container.addEventListener('click', this._flip);
+                } else {
+                    this.$.container.removeEventListener('click', this._flip);
+                }
+            }
+
+            _updateFrontImage(url) {
+                return url ? this.resolveUrl(url) : ''
+            }
+
+            // _enableChanged(enabled) {
+            //     this.enable === enabled;
+            //     // if(enabled) {
+            //     //     this.enable = true;
+            //     // } else {
+            //     //     this.enable = false;
+            //     // }
+            // }
+
+        }
+
+        customElements.define(GameCard.is, GameCard);
+
+    </script>
+</dom-module>
