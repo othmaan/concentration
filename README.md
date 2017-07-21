@@ -1,8 +1,8 @@
 # concentration
 Concentration game https://en.wikipedia.org/wiki/Concentration_(game)
 
-<div> Demo
-<img src="https://github.com/othmaan/concentration/blob/master/backend/assets/demo1.gif" alt="demo" width="40%">
+<div>
+<img src="https://github.com/othmaan/concentration/blob/master/backend/assets/demo1.gif" alt="demo" width="50%">
 </div>
 
 
