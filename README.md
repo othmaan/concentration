@@ -1,10 +1,12 @@
-# concentration
+# Concentration
 Concentration game https://en.wikipedia.org/wiki/Concentration_(game)
 
 <div>
 <img src="https://github.com/othmaan/concentration/blob/master/backend/assets/demo1.gif" alt="demo" width="50%">
 </div>
 
+## Full demo
+https://github.com/othmaan/concentration/blob/master/backend/assets/full-demo.mov
 
 ## Project structure
 The Project has 2 main folders 
