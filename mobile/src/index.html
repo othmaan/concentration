@@ -17,9 +17,11 @@
     <!-- Library imports -->
     <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     <script src="bower_components/fastclick/lib/fastclick.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
     <link rel="import" href="bower_components/iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="bower_components/iron-demo-helpers/demo-snippet.html">
-
+    <link rel="import" href="bower_components/iron-list/iron-list.html">
+    
     <!-- Custom Components -->
     <link rel="import" href="components/game-card.html">
     <link rel="import" href="components/game-score.html">
@@ -38,19 +40,17 @@
 </custom-style>
 
 
-
-
 <body>
     <iron-pages>
-        <game-score score="{{currentScore}}"></game-score>
-        <div class="centered">
+        <game-score></game-score>
+        <div class="centered" id="all-cards">
             <!-- TODO: Replace with iron-repeat -->
-            <game-card flippable unrevealed url="[[imageUrl]]" idx="0" onReveal="onReveal(id, idx)"></game-card>
-            <game-card flippable unrevealed url="[[imageUrl]]" idx="1" onReveal="onReveal(id, idx)"></game-card>
-            <game-card flippable unrevealed url="[[imageUrl]]" idx="2" onReveal="onReveal(id, idx)"></game-card>
-            <game-card flippable unrevealed url="[[imageUrl]]" idx="3" onReveal="onReveal(id, idx)"></game-card>
-            <game-card flippable unrevealed url="[[imageUrl]]" idx="4" onReveal="onReveal(id, idx)"></game-card>
-            <game-card flippable unrevealed url="[[imageUrl]]" idx="5" onReveal="onReveal(id, idx)"></game-card>
+            <game-card flippable unrevealed url="[[imageUrl]]" idx="0" onReveal="onReveal(id, idx)" class="ff"></game-card>
+            <game-card flippable unrevealed url="[[imageUrl]]" idx="1" onReveal="onReveal(id, idx)" class="ff"></game-card>
+            <game-card flippable unrevealed url="[[imageUrl]]" idx="2" onReveal="onReveal(id, idx)" class="ff"></game-card>
+            <game-card flippable unrevealed url="[[imageUrl]]" idx="3" onReveal="onReveal(id, idx)" class="ff"></game-card>
+            <game-card flippable unrevealed url="[[imageUrl]]" idx="4" onReveal="onReveal(id, idx)" class="ff"></game-card>
+            <game-card flippable unrevealed url="[[imageUrl]]" idx="5" onReveal="onReveal(id, idx)" class="ff"></game-card>
         </div>
     </iron-pages>
 

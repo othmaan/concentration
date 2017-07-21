@@ -2,24 +2,43 @@
 
 <dom-module id="game-score">
     <template>
-        <h1>Your score is [[score]]</h1>
+        <h1>Hello [[name]]</h1>
+        <h1>Your score is </h1>
+        <p>[[score]]</p>
+        <h1>Top scores</h1>
+        <iron-list items="[[scores]]" as="s">
+            <template>
+                <div>[[s.name]] - [[s.score]]</div>
+            </template>
+        </iron-list>
     </template>
     <script>
         class GameScore extends Polymer.Element {
             static get is() {
-                return "game-score";
+                return 'game-score';
             }
             constructor() {
                 super();
-                this.score1 = 999;
             }
 
             static get properties() {
                 return {
+                    /* Defines current user name */
+                    name: {
+                        type: String,
+                        value: '',
+                        reflectToAttribute: true
+                    },
                     /* Defines score for current user */
                     score: {
                         type: String,
                         value: '',
+                        reflectToAttribute: true
+                    },
+                    /* Defines top scores */
+                    scores: {
+                        type: Array,
+                        value: [],
                         reflectToAttribute: true
                     }
                 }

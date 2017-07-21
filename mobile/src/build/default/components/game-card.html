@@ -1,28 +1,36 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+
 
 <dom-module id="game-card">
     <template>
         <style>
-            :host {
+             :host {
                 display: inline-block;
                 font-size: 3em;
-                height: 154px; /* 88 * 3 */
-                width: 108.5px; /* 62 * 3 */
+                height: 154px;
+                /* 88 * 3 */
+                width: 108.5px;
+                /* 62 * 3 */
                 margin: 4px;
-                -webkit-touch-callout: none; /* iOS Safari */
-                -webkit-user-select: none; /* Chrome/Safari/Opera */
-                -moz-user-select: none; /* Firefox */
-                user-select: none; /* Non-prefixed version, currently not supported by any browser */
+                -webkit-touch-callout: none;
+                /* iOS Safari */
+                -webkit-user-select: none;
+                /* Chrome/Safari/Opera */
+                -moz-user-select: none;
+                /* Firefox */
+                user-select: none;
+                /* Non-prefixed version, currently not supported by any browser */
                 touch-action: none;
 
                 /* Hide flickering */
                 backface-visibility: hidden;
                 -webkit-backface-visibility: hidden;
 
-                -webkit-tap-highlight-color: rgba(0,0,0,0);
+                -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
             }
 
-            :host * {
+             :host * {
                 box-sizing: border-box;
             }
 
@@ -36,53 +44,87 @@
             }
 
 
-            #front, #back {
-              /* flip speed goes here */
-              transition: transform 0.25s;
+            #front,
+            #back {
+                /* flip speed goes here */
+                transition: transform 0.25s;
             }
 
             #back {
-              /* back, initially hidden pane */
-              transform: rotateY(-180deg);
-              /*-webkit-transform:rotateY(-180deg);
-                -moz-transform:rotateY(-180deg);
+                /* back, initially hidden pane */
+                transform: rotateY(-180deg);
+                -webkit-transform:rotateY(-180deg);
+                border: 0px solid transparent;
+                /*-moz-transform:rotateY(-180deg);
                 -ms-transform:rotateY(-180deg);
                 -o-transform:rotateY(-180deg);*/
             }
-
             /* flip the pane when hovered */
-            :host([unrevealed]) #back {
+
+             
+            /* Workaround to force Safari to paint again */
+            /* Ref: https://stackoverflow.com/questions/25468701/why-does-the-host-selector-only-work-in-chrome-with-platform-js */
+
+             /*:host(:active) #front,
+             :host(:active) #back {
+                border: 0px solid transparent;
+            }*/
+            
+
+            /*:host([unrevealed]) #back {
+                transform: rotate3d(0, 1, 0, 0deg);
+                -webkit-transform: rotate3d(0, 1, 0, 0deg);*/
+                
                 /*transform: rotateY(0deg);*/
-
-                 transform: rotate3d(0, 1, 0, 0deg);
-
-                /*-webkit-transform:rotateY(0deg);
+                /*-
                 -moz-transform:rotateY(0deg);
                 -ms-transform:rotateY(0deg);
                 -o-transform:rotateY(0deg);*/
-            }
-
-            /* Workaround to force Safari to paint again */
-            /* Ref: https://stackoverflow.com/questions/25468701/why-does-the-host-selector-only-work-in-chrome-with-platform-js */
-            :host(:active) #front,
-            :host(:active) #back {
-                border: 0px solid transparent;
-            }
+            /*}*/
             
-            :host([unrevealed]) #front {                
+            /*:host([unrevealed]) #front {
                 transform: rotate3d(0, 1, 0, 180deg);
+                -webkit-transform: rotate3d(0, 1, 0, 180deg);
+            }*/
+
+            :host(.ff) #back {
+                transform: rotate3d(0, 1, 0, 0deg);
+                -webkit-transform: rotate3d(0, 1, 0, 0deg);
             }
 
-            :host([disable]) {
+            :host(.ff) #front {
+                transform: rotate3d(0, 1, 0, 180deg);
+                -webkit-transform: rotate3d(0, 1, 0, 180deg);
+            }
+
+
+             :host([disable]) {
                 opacity: 0;
             }
 
-            #front, #back {
+            #front,
+            #back {
                 width: 100%;
                 height: 100%;
             }
 
-            #front, #back {
+            /*@keyframes repaint {
+                from {
+                    width: 99.999%
+                }
+                to {
+                    width: 100%
+                }
+            }*/
+
+            .repaint {
+                /*animation: repaint 1000ms;*/
+                display: inherit;
+                border: 0px solid transparent;
+            }
+
+            #front,
+            #back {
                 backface-visibility: hidden;
                 -webkit-backface-visibility: hidden;
                 position: absolute;
@@ -92,7 +134,9 @@
                 top: 0;
                 left: 0;
             }
-            #front, #back {
+
+            #front,
+            #back {
                 padding: 10px;
             }
 
@@ -106,17 +150,17 @@
                 background-position: 50% 50%;
                 background-size: 75%;
             }
-
             /* front pane, placed above back */
+
             #front {
                 z-index: 2;
                 /* for firefox 31 */
                 transform: rotateY(0deg);
-                -webkit-transform:rotateY(0deg);
+                -webkit-transform: rotateY(0deg);
             }
 
             .reversed {
-                 transform: rotate3d(0, 0, 1, 180deg);
+                transform: rotate3d(0, 0, 1, 180deg);
             }
 
             .hidden {
@@ -134,6 +178,8 @@
         <div id="container">
             <div id="front">
                 <img class="front__image" src="[[_updateFrontImage(url)]]">
+                 <!--<iron-image class="front__image" style="background-color: lightgray;"
+                 sizing="cover" preload fade src="[[_updateFrontImage(url)]]"></iron-image>-->
             </div>
             <div id="back">
                 <div id="back-draw"></div>
@@ -150,7 +196,7 @@
 
             static get properties() {
                 return {
-                   
+
                     /* Tells whether the card show its front or back face. */
                     unrevealed: {
                         type: Boolean,
@@ -171,18 +217,25 @@
                         reflectToAttribute: true
                     },
 
+                    // /*  */
+                    // flipp: {
+                    //     type: Function,
+                    //     value: false,
+                    //     reflectToAttribute: true
+                    // },
+
                     /* Defines url for background image for card front */
                     url: {
                         type: String,
                         value: '',
-                        reflectToAttribute:true
+                        reflectToAttribute: true
                     },
 
                     /* Tells whether the card is shown or hidden */
                     disable: {
                         type: Boolean,
                         value: false,
-                        reflectToAttribute:true
+                        reflectToAttribute: true
                     },
 
                     /* Card id */
@@ -200,21 +253,71 @@
 
             static get observers() {
                 return [
-                  '_flippableChanged(flippable)'
-                //   ,'_enableChanged(enabled)'
+                    '_flippableChanged(flippable)'
+                    //   ,'_enableChanged(enabled)'
                 ]
-              }
+            }
 
             constructor() {
                 super();
                 this._flip = this.flip.bind(this);
+                // if(this.unrevealed) { 
+                //     this.classList.add('ff'); 
+                // } else {
+                //     this.classList.remove('ff')
+                // }
                 // this._enabled = this.enable.bind(this);
             }
 
+            // init() {
+            //     if(this.unrevealed) { 
+            //         this.classList.add('ff'); 
+            //     } else {
+            //         this.classList.remove('ff')
+            //     }
+            // }
+
             flip() {
+                // this.unrevealed = !this.unrevealed;
+
+                // if(this.unrevealed) { 
+                //     this.classList.add('ff'); 
+                // } else {
+                //     this.classList.remove('ff')
+                // }
+
+                // this.unrevealed = !this.unrevealed;
+                this.classList.toggle("ff");
                 this.unrevealed = !this.unrevealed;
 
-                if(!this.unrevealed) {
+                // document.querySelector("body").style.fontSize='';
+
+                // jss.set('.centered', {
+                //     // 'font-size': '15px',
+                //     'color': 'inherited'
+                //     // 'border': '0px solid transparent'
+                // });
+
+                // setTimeout(() => {
+                // //     var disp = this.style.display;
+                // //   this.style.display = '0';
+                // // //   element.style.border = '1px solid green';
+                // // //   element.style.transform = 'translateZ(0)';
+                // // var trick = this.offsetHeight;
+                // // this.style.display = disp;
+                // console.info(this.style);
+                // // this.style.fontSize = '4em';
+                // jss.set('.centered', {
+                //     // 'font-size': '15px',
+                //     'color': 'inherited'
+                //     // 'border': '0px solid transparent'
+                // });
+
+                // // _forceRedraw(this);
+                // }, 1000);
+                
+
+                if (!this.unrevealed) {
                     onReveal(this.id, this.idx);
                 }
             }
@@ -240,9 +343,17 @@
             //     // }
             // }
 
+             _forceRedraw(element) {
+                  var disp = element.style.display;
+                  element.style.display = '0';
+                //   element.style.border = '1px solid green';
+                //   element.style.transform = 'translateZ(0)';
+                var trick = element.offsetHeight;
+                element.style.display = disp;
+            }
+
         }
 
         customElements.define(GameCard.is, GameCard);
-
     </script>
 </dom-module>

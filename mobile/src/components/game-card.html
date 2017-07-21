@@ -1,4 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+
 
 <dom-module id="game-card">
     <template>
@@ -51,33 +53,50 @@
             #back {
                 /* back, initially hidden pane */
                 transform: rotateY(-180deg);
-                /*-webkit-transform:rotateY(-180deg);
-                -moz-transform:rotateY(-180deg);
+                -webkit-transform:rotateY(-180deg);
+                border: 0px solid transparent;
+                /*-moz-transform:rotateY(-180deg);
                 -ms-transform:rotateY(-180deg);
                 -o-transform:rotateY(-180deg);*/
             }
             /* flip the pane when hovered */
 
-             :host([unrevealed]) #back {
-                /*transform: rotateY(0deg);*/
-                transform: rotate3d(0, 1, 0, 0deg);
-
-                /*-webkit-transform:rotateY(0deg);
-                -moz-transform:rotateY(0deg);
-                -ms-transform:rotateY(0deg);
-                -o-transform:rotateY(0deg);*/
-            }
+             
             /* Workaround to force Safari to paint again */
             /* Ref: https://stackoverflow.com/questions/25468701/why-does-the-host-selector-only-work-in-chrome-with-platform-js */
 
-             :host(:active) #front,
+             /*:host(:active) #front,
              :host(:active) #back {
                 border: 0px solid transparent;
+            }*/
+            
+
+            /*:host([unrevealed]) #back {
+                transform: rotate3d(0, 1, 0, 0deg);
+                -webkit-transform: rotate3d(0, 1, 0, 0deg);*/
+                
+                /*transform: rotateY(0deg);*/
+                /*-
+                -moz-transform:rotateY(0deg);
+                -ms-transform:rotateY(0deg);
+                -o-transform:rotateY(0deg);*/
+            /*}*/
+            
+            /*:host([unrevealed]) #front {
+                transform: rotate3d(0, 1, 0, 180deg);
+                -webkit-transform: rotate3d(0, 1, 0, 180deg);
+            }*/
+
+            :host(.ff) #back {
+                transform: rotate3d(0, 1, 0, 0deg);
+                -webkit-transform: rotate3d(0, 1, 0, 0deg);
             }
 
-             :host([unrevealed]) #front {
+            :host(.ff) #front {
                 transform: rotate3d(0, 1, 0, 180deg);
+                -webkit-transform: rotate3d(0, 1, 0, 180deg);
             }
+
 
              :host([disable]) {
                 opacity: 0;
@@ -159,6 +178,8 @@
         <div id="container" >
             <div id="front">
                 <img class="front__image" src="[[_updateFrontImage(url)]]"></img>
+                 <!--<iron-image class="front__image" style="background-color: lightgray;"
+                 sizing="cover" preload fade src="[[_updateFrontImage(url)]]"></iron-image>-->
             </div>
             <div id="back">
                 <div id="back-draw"></div>
@@ -195,6 +216,13 @@
                         value: false,
                         reflectToAttribute: true
                     },
+
+                    // /*  */
+                    // flipp: {
+                    //     type: Function,
+                    //     value: false,
+                    //     reflectToAttribute: true
+                    // },
 
                     /* Defines url for background image for card front */
                     url: {
@@ -233,11 +261,61 @@
             constructor() {
                 super();
                 this._flip = this.flip.bind(this);
+                // if(this.unrevealed) { 
+                //     this.classList.add('ff'); 
+                // } else {
+                //     this.classList.remove('ff')
+                // }
                 // this._enabled = this.enable.bind(this);
             }
 
+            // init() {
+            //     if(this.unrevealed) { 
+            //         this.classList.add('ff'); 
+            //     } else {
+            //         this.classList.remove('ff')
+            //     }
+            // }
+
             flip() {
+                // this.unrevealed = !this.unrevealed;
+
+                // if(this.unrevealed) { 
+                //     this.classList.add('ff'); 
+                // } else {
+                //     this.classList.remove('ff')
+                // }
+
+                // this.unrevealed = !this.unrevealed;
+                this.classList.toggle("ff");
                 this.unrevealed = !this.unrevealed;
+
+                // document.querySelector("body").style.fontSize='';
+
+                // jss.set('.centered', {
+                //     // 'font-size': '15px',
+                //     'color': 'inherited'
+                //     // 'border': '0px solid transparent'
+                // });
+
+                // setTimeout(() => {
+                // //     var disp = this.style.display;
+                // //   this.style.display = '0';
+                // // //   element.style.border = '1px solid green';
+                // // //   element.style.transform = 'translateZ(0)';
+                // // var trick = this.offsetHeight;
+                // // this.style.display = disp;
+                // console.info(this.style);
+                // // this.style.fontSize = '4em';
+                // jss.set('.centered', {
+                //     // 'font-size': '15px',
+                //     'color': 'inherited'
+                //     // 'border': '0px solid transparent'
+                // });
+
+                // // _forceRedraw(this);
+                // }, 1000);
+                
 
                 if (!this.unrevealed) {
                     onReveal(this.id, this.idx);
@@ -264,6 +342,15 @@
             //     //     this.enable = false;
             //     // }
             // }
+
+             _forceRedraw(element) {
+                  var disp = element.style.display;
+                  element.style.display = '0';
+                //   element.style.border = '1px solid green';
+                //   element.style.transform = 'translateZ(0)';
+                var trick = element.offsetHeight;
+                element.style.display = disp;
+            }
 
         }
 

@@ -18,11 +18,20 @@
   ],
   "authors": [
     "Florian Maffini <florian.maffini@free.fr>",
-    "Extended by: Ahmed Othman"
+    "Extended by: Ahmed Othman<aaothmaan@gmail.com>"
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
-    "fastclick": "^1.0.6"
+    "fastclick": "^1.0.6",
+    "iron-image": "^2.1.1",
+    "jss": "*",
+    "paper-dialog": "^2.0.0",
+    "paper-dialog-scrollable": "^2.1.0",
+    "neon-animation": "^2.0.1",
+    "paper-item": "^2.0.0",
+    "iron-selector": "PolymerElements/iron-selector#^2.0.0",
+    "underscore": "^1.8.3",
+    "iron-list": "PolymerElements/iron-list#^2.0.6"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^2.0.0",
