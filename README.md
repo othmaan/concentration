@@ -1,6 +1,12 @@
 # concentration
 Concentration game
 
+<div>
+<img src="https://github.com/othmaan/concentration/blob/master/backend/assets/app.png" alt="screenshot1" width="40%">
+<img src="https://github.com/othmaan/concentration/blob/master/backend/assets/app2.png" alt="screenshot2" width="40%">
+</div>
+
+
 ## Project structure
 The Project has 2 main folders 
 1. mobile folder which has cross platform app
